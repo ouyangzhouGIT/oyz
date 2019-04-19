@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" href="weibo.css">
+	</head>
+	<body>
+		<button type="button" id="btn">发表动态</button>
+		<button type="button" id="chehui" class="see">撤回</button>
+		<div class="divs">
+			
+		</div>
+		<div id="box" class="bigBox">
+			
+			<div id="content" class="con">
+				<p class="title">发表今日动态<span class="off">X</span></p>
+				<div class="article">
+					请输入用户名：<input type="text" id="userName" class="name">
+					<div class="story">
+						内容：<textarea rows="14" cols="71">
+							
+						</textarea>
+					</div>
+					<button type="button" id="add">发布</button>
+				</div>
+			</div>
+			
+		</div>
+		
+		
+		
+		<script type="text/javascript">
+		class Fn {
+			constructor(select) {
+			    this.btn = document.querySelector(select)
+				this.box = document.querySelector("#box")
+				this.content = this.box.querySelector("#content")
+				this.off = this.box.querySelector(".off") //取消键
+				this.userName = this.box.querySelector("#userName") //用户名
+				this.text = this.box.querySelector("textarea") //输入
+				this.add = this.box.querySelector("#add") //发布键
+				this.divs = document.querySelector(".divs")
+				this.div = document.querySelectorAll(".ac")
+				this.chehui= document.querySelector("#chehui")
+				this.html =""
+				this.n=0;
+				this.init()
+			}
+			
+			init(){
+				this.btn.onclick = this.btnClick.bind(this)
+				this.off.onclick = this.btnoff.bind(this)
+				this.add.onclick = this.addDiv.bind(this)
+				this.backClick()
+				this.chehui.onclick = this.onBack.bind(this)
+				this.onsize()
+				this.getBody()
+				this.timer()
+			}
+			
+			//点击弹框
+			btnClick(){
+				this.box.className = "bigbox"
+			}
+			//点击取消
+			btnoff(){
+				this.box.className = "bigBox"
+			}
+			
+			
+			onBack(){
+				if(this.n<120){
+					this.div = document.querySelector(".ac")
+					this.div.remove()
+					this.chehui.className= "see"
+				}else{
+					alert("超过两分钟无法撤回")
+				}
+				
+			}
+			
+			
+			backClick(){
+				var _this = this 
+					this.divs.oncontextmenu = function(e){
+					e.e||event
+					let left = e.offsetX;
+					let top = e.offsetY;
+					let target = e.target
+					let bodywidth = document.body.clientWidth
+					let bodyheight = document.body.clientHeight
+					if(target.className == "ac"){
+						console.log(e.offsetY,e.offsetX)
+						_this.chehui.style.left = (bodywidth/2+e.offsetX-190)+"px";
+						_this.chehui.style.top = (e.offsetY+15)+"px";
+						_this.chehui.className=""
+					}
+					return false
+				}
+				}
+				timer(){
+					let _this = this
+					setInterval(function(){
+						console.log(++_this.n)
+					},1000)
+				}
+			
+			
+			
+			addDiv(){
+				let date = new Date();
+				let year = date.getFullYear()
+				let month = date.getMonth()+1
+				let day = date.getDate()
+				let hours = date.getHours()
+				let minutes = date.getMinutes()
+				let val = (this.userName.value).trim()
+				let val1 = (this.text.value).trim()
+				this.html += `<div class="ac" id="addlist">
+				<p>${"用户："+val}</p>
+				<p>${"动态:"+val1}</p>
+				<p class="date">${year+"年"+month+"月"+day+"日"+hours+"时"+minutes+"分"}</p><br>
+				<div>`
+				this.divs.innerHTML = this.html
+				this.btnoff()
+				this.timer()
+			}
+			
+			
+			
+			//居中
+			getBody(){
+				let bodywidth = document.body.clientWidth
+				let bodyheight = document.body.clientHeight
+				this.content.style.left = (bodywidth - 600)/2 + "px"
+				this.content.style.top =( bodyheight-300)/2 + "px"
+			}
+			
+			onsize(){
+				var _this = this
+				window.onresize = function(){
+					_this.getBody()
+				}
+			}
+			
+			
+			
+			
+			
+			
+			
+			
+			
+		}
+		
+		new Fn("#btn")
+		</script>
+	</body>
+</html>

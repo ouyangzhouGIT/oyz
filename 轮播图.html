@@ -1,0 +1,109 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title></title>
+<link rel="stylesheet" href="imgRoll.css">
+</head>
+
+<body>
+<div id="div1">
+	<ul class="ac">
+    	<li class="ac"><a href="javascript:;"><img src="1.jpg" /></a></li>
+    	<li><a href="javascript:;"><img src="2.jpg" /></a></li>
+    	<li><a href="javascript:;"><img src="3.jpg" /></a></li>
+    	<li><a href="javascript:;"><img src="4.jpg" /></a></li>
+    	<li><a href="javascript:;"><img src="5.jpg" /></a></li>
+    </ul>
+    <ol>
+    	<li class="ac">1</li>
+    	<li>2</li>
+    	<li>3</li>
+    	<li>4</li>
+    	<li>5</li>
+    </ol>
+    <a href="javascript:;" id="goPrev">&laquo;</a>
+    <a href="javascript:;" id="goNext">&raquo;</a>
+</div>
+<script>
+	class ImgCut {
+		constructor (selector) {
+			this.div = document.querySelector(selector);
+			this.ul = this.div.querySelector("ul");
+			this.btns = this.div.querySelector("ol").children;
+			this.goPrev = document.querySelector("#goPrev");
+			this.goNext = document.querySelector("#goNext");
+			this.index = 0; 
+			this.lastIndex = 0; 
+			this.timer = null;
+			
+			this.init();
+		}
+		init () {
+			this.btnClick();
+			this.goNextClick();
+			this.goPrevClick ();
+			this.autoPlay ();
+			this.enterStop ();
+			this.leaveStart ();
+		}
+		
+		btnClick (){
+			Array.from(this.btns).forEach((btn, i) => {
+				btn.onclick =  () => {
+					this.index = i;
+					this.changeImg();
+				}
+			})
+		}
+		
+		goNextClick (){
+			this.goNext.onclick =  () => {
+				this.index++;
+				if(this.index === this.btns.length) {
+					this.index = 0; 	
+				}
+				this.changeImg();
+			}
+		}
+		
+		goPrevClick (){
+			this.goPrev.onclick = () => {
+				this.index--;
+				if(this.index < 0){
+				this.index = this.btns.length-1; 
+				} 
+				this.changeImg();
+			}
+		}
+		
+		autoPlay () {
+
+			this.timer = setInterval( () => {
+				this.goNext.onclick();
+			},2000);
+		}
+		
+		enterStop () {
+			this.div.onmouseenter = () => {
+				clearInterval(this.timer);
+			}
+		}
+		
+		leaveStart () {
+			this.div.onmouseleave = () => {
+				this.autoPlay ();
+			}
+		}
+		
+		changeImg () {
+		this.btns[this.lastIndex].classList.remove("ac");
+		this.btns[this.index].classList.add("ac");
+		this.ul.style.left = -850 * this.index + "px";
+		this.lastIndex = this.index;
+		}
+	}
+	
+	new ImgCut ("#div1");
+</script>
+</body>
+</html>
